@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
@@ -15,6 +16,7 @@ import { Roles } from 'src/role/roles.decorator';
 import { Role } from 'src/role/enums/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/role/role.guard';
+import { ParseIntPipe } from 'src/pipe/parse-int.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +30,10 @@ export class UsersController {
 
   @Get()
   @Roles(Role.Admin)
-  fetch(@Query('skip') skip: string, @Query('limit') limit: string) {
+  fetch(
+    @Query('skip', new ParseIntPipe()) skip,
+    @Query('limit', new ParseIntPipe(), new DefaultValuePipe(4)) limit,
+  ) {
     return this.service.fetchUsers(skip, limit);
   }
 
@@ -48,8 +53,8 @@ export class UsersController {
   @Roles(Role.Admin)
   search(
     @Query('key') key: string,
-    @Query('skip') skip: string,
-    @Query('limit') limit: string,
+    @Query('skip', new ParseIntPipe()) skip,
+    @Query('limit', new ParseIntPipe(), new DefaultValuePipe(4)) limit,
   ) {
     return this.service.searchUser(key, skip, limit);
   }

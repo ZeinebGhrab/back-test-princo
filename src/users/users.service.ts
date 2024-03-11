@@ -48,12 +48,12 @@ export class UsersService {
       }
     }
   }
-  async fetchUsers(skip, limit): Promise<User[]> {
+  async fetchUsers(skip: number, limit: number): Promise<User[]> {
     try {
       return await this.userModel
         .find({}, { password: 0 })
-        .skip(parseInt(skip))
-        .limit(parseInt(limit));
+        .skip(skip)
+        .limit(limit);
     } catch (error) {
       throw new HttpException('could not fetch users', HttpStatus.BAD_REQUEST, {
         cause: error,
@@ -89,7 +89,7 @@ export class UsersService {
     }
   }
 
-  async searchUser(key: string, skip: string, limit: string) {
+  async searchUser(key: string, skip: number, limit: number) {
     try {
       return await this.userModel
         .find(
@@ -102,8 +102,8 @@ export class UsersService {
           },
           { password: 0 },
         )
-        .skip(parseInt(skip))
-        .limit(parseInt(limit));
+        .skip(skip)
+        .limit(limit);
     } catch (error) {
       throw new HttpException('could not delete user', HttpStatus.BAD_REQUEST, {
         cause: error,
